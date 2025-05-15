@@ -1,63 +1,118 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { signup } from "@/app/singup/actions";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
-
-export function SignupForm() {
-  const [state, formAction] = useActionState(signup, null);
+import { singupAction } from "@/app/singup/singupAction";
+import { SchemaSingUpModel } from "@/schema/schemaSingUp";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "./ui/button";
+function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <div className="grid gap-6">
-      <form action={formAction}>
-        <div className="grid gap-4">
+    <Button type="submit" disabled={pending}>
+      {pending ? "Creating account..." : "Create an account"}
+    </Button>
+  );
+}
+
+type FormState = {
+  message?: string;
+  success: boolean;
+  formData?: SchemaSingUpModel;
+  errors?: Partial<Record<string, string>>;
+};
+
+const initialState: FormState = {
+  message: "",
+  success: false,
+  errors: {},
+  formData: undefined,
+};
+
+export function SignupForm() {
+  const [state, formAction] = useActionState(singupAction, initialState);
+
+  return (
+    <Card className="grid gap-6 max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle>Lets Get Started</CardTitle>
+        <CardDescription>
+          You can use your phone number to create an account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form action={formAction} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="name">Full Name</Label>
-            <Input id="name" name="name" placeholder="John Doe" required />
-            {state?.error?.name && (
-              <p className="text-sm text-red-500">{state.error.name[0]}</p>
+            <Input
+              id="name"
+              name="name"
+              placeholder="Aruna Kumara"
+              defaultValue={state.formData?.name || ""}
+            />
+            {state.errors?.name && (
+              <p className="text-red-500 text-sm">{state.errors.name}</p>
             )}
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="m@example.com"
-              required
+              placeholder="aruna@gmail.com"
+              defaultValue={state.formData?.email || ""}
             />
-            {state?.error?.email && (
-              <p className="text-sm text-red-500">{state.error.email[0]}</p>
+            {state.errors?.email && (
+              <p className="text-red-500 text-sm">{state.errors.email}</p>
             )}
           </div>
+
           <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
+            <Label htmlFor="phone">Phone</Label>
+            <Input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="0703456789"
+              defaultValue={state.formData?.phone || ""}
+            />
+            {state.errors?.phone && (
+              <p className="text-red-500 text-sm">{state.errors.phone}</p>
+            )}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               name="password"
               type="password"
-              required
-              minLength={6}
+              defaultValue={state.formData?.password || ""}
             />
-            {state?.error?.password && (
-              <p className="text-sm text-red-500">{state.error.password[0]}</p>
+            {state.errors?.password && (
+              <p className="text-red-500 text-sm">{state.errors.password}</p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? "Creating account..." : "Create an account"}
-          </Button>
-        </div>
-      </form>
-      {state?.message && (
-        <p className="text-sm text-red-500 text-center">{state.message}</p>
-      )}
-    </div>
+          <CardFooter>
+            {!state.success && (
+              <p className="text-red-500 text-sm">{state.message}</p>
+            )}
+          </CardFooter>
+          <SubmitButton />
+        </form>
+      </CardContent>
+    </Card>
   );
 }

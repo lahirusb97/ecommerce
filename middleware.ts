@@ -1,19 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { verifyJwt } from "./lib/jwtToken";
 
-const protectedRoutes = ["/admin"];
-const publicRoutes = ["/login", "/register"];
+type JwtPayload = { userId: string; role: string };
 
-export default function middleware(req: NextRequest) {
-  const session = req.cookies.get("session");
-  if (!session) {
-    if (
-      protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
-    ) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-  } else {
-    if (publicRoutes.some((route) => req.nextUrl.pathname.startsWith(route))) {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/login") return NextResponse.next();
+  const token = request.cookies.get("token")?.value;
+  const payload = token ? await verifyJwt(token) : null;
+  if (!payload) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
+  // If trying to access /admin as a non-admin
+  if (pathname.startsWith("/admin") && payload.role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+  // If trying to access /myaccount as a non-customer
+  if (pathname.startsWith("/myaccount") && payload.role !== "CUSTOMER") {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/admin/:path*", "/admin", "/myaccount/:path*", "/myaccount"],
+};
