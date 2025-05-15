@@ -80,7 +80,7 @@ export function LoginForm() {
             </Button>
             <span className="text-center text-xs text-muted-foreground">
               Don’t have an account?{" "}
-              <a href="/register" className="underline">
+              <a href="/singup" className="underline">
                 Register
               </a>
             </span>

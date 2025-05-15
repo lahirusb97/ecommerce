@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyJwt } from "./lib/jwtToken";
 
-type JwtPayload = { userId: string; role: string };
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -13,6 +11,10 @@ export async function middleware(request: NextRequest) {
   if (!payload) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+  // If trying to access login Custome to admin or superadmin
+  if (pathname.startsWith("/admin") && payload.role === "CUSTOMER") {
+    return NextResponse.redirect(new URL("/myaccount", request.url));
+  }
   // If trying to access /admin as a non-admin
   if (pathname.startsWith("/admin") && payload.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -21,6 +23,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/myaccount") && payload.role !== "CUSTOMER") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+
   return NextResponse.next();
 }
 
