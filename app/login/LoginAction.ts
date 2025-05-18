@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { basePrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { signJwt } from "@/lib/jwtToken";
 import { cookies } from "next/headers";
@@ -36,7 +36,7 @@ export async function loginAction(
   }
 
   // Find user by email or phone
-  const user = await prisma.user.findFirst({
+  const user = await basePrisma.user.findFirst({
     where: {
       OR: [{ email: identifier }, { phone: identifier }],
     },

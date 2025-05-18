@@ -1,7 +1,7 @@
 "use server";
 
 import { schemaSingUp, SchemaSingUpModel } from "@/schema/schemaSingUp";
-import { prisma } from "@/lib/prisma";
+import { basePrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { signJwt } from "@/lib/jwtToken";
@@ -44,17 +44,17 @@ export async function singupAction(
   let existingUser = null;
 
   if (safeEmail && safePhone) {
-    existingUser = await prisma.user.findFirst({
+    existingUser = await basePrisma.user.findFirst({
       where: {
         OR: [{ email: safeEmail }, { phone: safePhone }],
       },
     });
   } else if (safeEmail) {
-    existingUser = await prisma.user.findUnique({
+    existingUser = await basePrisma.user.findUnique({
       where: { email: safeEmail },
     });
   } else if (safePhone) {
-    existingUser = await prisma.user.findUnique({
+    existingUser = await basePrisma.user.findUnique({
       where: { phone: safePhone },
     });
   }
@@ -79,7 +79,7 @@ export async function singupAction(
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
+  const user = await basePrisma.user.create({
     data: {
       name,
       email: safeEmail,

@@ -5,22 +5,36 @@ import { verifyJwt } from "./lib/jwtToken";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/login") return NextResponse.next();
   const token = request.cookies.get("token")?.value;
   const payload = token ? await verifyJwt(token) : null;
-  if (!payload) {
+
+  if (!payload && pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  // If trying to access login Custome to admin or superadmin
-  if (pathname.startsWith("/admin") && payload.role === "CUSTOMER") {
+
+  // 🔒 Redirect signed-in users away from /login
+  if (pathname === "/login") {
+    if (payload?.role === "CUSTOMER") {
+      return NextResponse.redirect(new URL("/myaccount", request.url));
+    }
+    if (payload?.role === "ADMIN") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+    return NextResponse.next(); // fallback: let them see /login
+  }
+
+  // 🚫 Prevent customers accessing admin
+  if (pathname.startsWith("/admin") && payload?.role === "CUSTOMER") {
     return NextResponse.redirect(new URL("/myaccount", request.url));
   }
-  // If trying to access /admin as a non-admin
-  if (pathname.startsWith("/admin") && payload.role !== "ADMIN") {
+
+  // 🚫 Only admins can access /admin
+  if (pathname.startsWith("/admin") && payload?.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  // If trying to access /myaccount as a non-customer
-  if (pathname.startsWith("/myaccount") && payload.role !== "CUSTOMER") {
+
+  // 🚫 Only customers can access /myaccount
+  if (pathname.startsWith("/myaccount") && payload?.role !== "CUSTOMER") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -28,5 +42,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/admin", "/myaccount/:path*", "/myaccount"],
+  matcher: [
+    "/admin/:path*",
+    "/admin",
+    "/myaccount/:path*",
+    "/myaccount",
+    "/login",
+  ],
 };
