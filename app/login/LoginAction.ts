@@ -1,10 +1,9 @@
 "use server";
-
-import { basePrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { signJwt } from "@/lib/jwtToken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 
 export type LoginFormState =
   | { success: true; message: string }
@@ -36,7 +35,7 @@ export async function loginAction(
   }
 
   // Find user by email or phone
-  const user = await basePrisma.user.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       OR: [{ email: identifier }, { phone: identifier }],
     },
@@ -61,7 +60,7 @@ export async function loginAction(
     };
 
   // Generate and set JWT
-  const token = await signJwt({ userId: user.id, role: user.role });
+  const token = await signJwt({ userId: Number(user.id), role: user.role });
   (await cookies()).set("token", token, {
     httpOnly: true,
     path: "/",

@@ -9,12 +9,12 @@ const encoder = new TextEncoder();
 // Sign JWT (async)
 
 type JwtPayload = {
-  userId: number;
+  userId: bigint;
   role: "CUSTOMER" | "ADMIN" | "SUPERADMIN";
 };
 
 export async function signJwt(payload: JwtPayload): Promise<string> {
-  return await new SignJWT(payload)
+  return await new SignJWT({ ...payload, userId: payload.userId.toString() })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setExpirationTime("7d")
     .sign(encoder.encode(JWT_SECRET));

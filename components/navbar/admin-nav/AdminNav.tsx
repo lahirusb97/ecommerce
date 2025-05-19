@@ -1,12 +1,11 @@
-import NavBar from "@/components/nav-bar/NavBar";
-import { NavbarDemo } from "@/components/NavbarDemo";
+import { AdminSideDrawer } from "@/components/AdminSideDrawer";
 import React from "react";
 
 export default function AdminNav() {
   return (
     <div>
-      <NavbarDemo />
-      <NavBar />
+      <AdminSideDrawer />
+      {/* <NavBar /> */}
     </div>
   );
 }

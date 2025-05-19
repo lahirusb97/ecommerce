@@ -8,29 +8,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model category {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique(map: "Category_name_key")
-  slug           String          @unique(map: "Category_slug_key")
-  description    String?
-  imageUrl       String?
-  status         category_status @default(ACTIVE)
-  parentId       Int?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime
-  category       category?       @relation("categoryTocategory", fields: [parentId], references: [id], map: "Category_parentId_fkey")
-  other_category category[]      @relation("categoryTocategory")
-
-  @@index([parentId], map: "Category_parentId_fkey")
+enum user_role {
+  CUSTOMER
+  ADMIN
+  SUPERADMIN
 }
 
-model user {
-  id        Int       @id @default(autoincrement())
+model User {
+  id        BigInt    @id @default(autoincrement())
   name      String?
   email     String?   @unique(map: "User_email_key")
   password  String
   createdAt DateTime  @default(now())
-  updatedAt DateTime
+  updatedAt DateTime  @updatedAt
   phone     String?   @unique(map: "User_phone_key")
   role      user_role @default(CUSTOMER)
 }
@@ -40,8 +30,86 @@ enum category_status {
   INACTIVE
 }
 
-enum user_role {
-  CUSTOMER
-  ADMIN
-  SUPERADMIN
+model Category {
+  id                BigInt            @id @default(autoincrement())
+  name              String
+  slug              String            @unique
+  parentId          BigInt?
+  parent            Category?         @relation("CategoryToParent", fields: [parentId], references: [id])
+  children          Category[]        @relation("CategoryToParent")
+  products          Product[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  status            category_status   @default(ACTIVE)
+  productCategories ProductCategory[]
+}
+
+model Brand {
+  id        BigInt    @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id                BigInt            @id @default(autoincrement())
+  name              String
+  description       String?
+  categoryId        BigInt
+  category          Category          @relation(fields: [categoryId], references: [id])
+  brandId           BigInt?
+  brand             Brand?            @relation(fields: [brandId], references: [id])
+  variants          ProductVariant[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  productCategories ProductCategory[]
+}
+
+model VariantOption {
+  id            BigInt                @id @default(autoincrement())
+  name          String
+  values        VariantOptionValue[]
+  variantValues ProductVariantValue[]
+}
+
+model VariantOptionValue {
+  id            BigInt                @id @default(autoincrement())
+  optionId      BigInt
+  option        VariantOption         @relation(fields: [optionId], references: [id])
+  value         String
+  variantValues ProductVariantValue[]
+}
+
+model ProductVariant {
+  id        BigInt                @id @default(autoincrement())
+  productId BigInt
+  product   Product               @relation(fields: [productId], references: [id])
+  sku       String                @unique
+  price     Decimal               @db.Decimal(10, 2)
+  stockQty  Int
+  imageUrl  String?
+  values    ProductVariantValue[]
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+}
+
+model ProductVariantValue {
+  id        BigInt             @id @default(autoincrement())
+  variantId BigInt
+  variant   ProductVariant     @relation(fields: [variantId], references: [id])
+  optionId  BigInt
+  option    VariantOption      @relation(fields: [optionId], references: [id])
+  valueId   BigInt
+  value     VariantOptionValue @relation(fields: [valueId], references: [id])
+}
+
+model ProductCategory {
+  productId  BigInt
+  product    Product  @relation(fields: [productId], references: [id])
+  categoryId BigInt
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([productId, categoryId])
 }

@@ -1,15 +1,11 @@
 // app/api/categories/route.ts
 
 import schemaCategory from "@/schema/schemaCategory";
-import { NextResponse } from "next/server";
-import {
-  PrismaClientKnownRequestError,
-  // PrismaClientUnknownRequestError,
-  // PrismaClientRustPanicError,
-  // PrismaClientInitializationError,
-  // PrismaClientValidationError,
-} from "@/lib/generated/prisma/runtime/library";
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClientKnownRequestError } from "@/lib/generated/prisma/runtime/library";
 import { prisma } from "@/lib/prisma";
+import { Category } from "@/lib/generated/prisma";
+import { verifyJwt } from "@/lib/jwtToken";
 
 const isPrismaKnownRequestError = (
   error: unknown
@@ -21,8 +17,14 @@ const isPrismaKnownRequestError = (
   );
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   // 1) parse & validate
+  const token = req.cookies.get("token")?.value;
+  const payload = token ? await verifyJwt(token) : null;
+
+  if (!payload || payload.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const body = await req.json();
   const parsed = schemaCategory.safeParse(body);
 
@@ -45,7 +47,8 @@ export async function POST(req: Request) {
         updatedAt: new Date(),
       },
     });
-    return NextResponse.json(newCategory, { status: 201 });
+
+    return NextResponse.json(safeCategory(newCategory), { status: 201 });
   } catch (error: unknown) {
     if (isPrismaKnownRequestError(error)) {
       if (error.code === "P2002") {
@@ -78,4 +81,11 @@ export async function GET(req: Request) {
   });
 
   return NextResponse.json(categories);
+}
+function safeCategory(category: Category) {
+  return {
+    ...category,
+    id: category.id.toString(),
+    parentId: category.parentId ? category.parentId.toString() : null,
+  };
 }
