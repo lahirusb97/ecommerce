@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { schemaVariantOption } from "@/schema/schemaVariantOption";
-import { useState } from "react";
 import { toast } from "sonner";
 
 export function VariantEditTableRow({
@@ -21,8 +20,6 @@ export function VariantEditTableRow({
   onSaved?: () => void;
   onCancel?: () => void;
 }) {
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -34,7 +31,6 @@ export function VariantEditTableRow({
   });
 
   const onSubmit = async (values: { name: string }) => {
-    setServerError(null);
     try {
       const res = await fetch(`/api/variant-options/${id}`, {
         method: "PATCH",
@@ -50,7 +46,9 @@ export function VariantEditTableRow({
       }
       reset(values);
       if (onSaved) onSaved();
-    } catch {}
+    } catch {
+      toast.error("Failed to update variant option.");
+    }
   };
 
   return (
@@ -72,12 +70,9 @@ export function VariantEditTableRow({
                 {errors.name.message}
               </div>
             )}
-            {serverError && (
-              <div className="text-red-500 text-xs mt-1">{serverError}</div>
-            )}
           </div>
           <div className="flex gap-2">
-            <Button type="submit" disabled={isSubmitting} size="sm">
+            <Button type="submit" disabled={isSubmitting} size="xsm">
               Save
             </Button>
             {onCancel && (
@@ -85,7 +80,7 @@ export function VariantEditTableRow({
                 type="button"
                 variant="outline"
                 disabled={isSubmitting}
-                size="sm"
+                size="xsm"
                 onClick={onCancel}
               >
                 Cancel

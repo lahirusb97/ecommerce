@@ -55,6 +55,7 @@ model Brand {
 
 model Product {
   id          BigInt          @id @default(autoincrement())
+  slug        String          @unique
   name        String
   description String?
   categoryId  BigInt

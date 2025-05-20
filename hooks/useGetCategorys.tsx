@@ -3,10 +3,13 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { paramsNullCleaner } from "@/lib/paramsNullCleaner";
 
 interface CategoryModel {
-  id: number;
+  id: string;
   name: string;
   slug: string;
-  parentId: number | null;
+  parentId: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface UseGetCategoryReturn {
@@ -41,8 +44,9 @@ const useGetCategories = (): UseGetCategoryReturn => {
     setCategoriesError(false);
 
     try {
-      const query = new URLSearchParams(paramsNullCleaner(params)).toString();
-      const res = await fetch(`/api/category/${query}`, {
+      const paramsData = paramsNullCleaner(params).toString();
+      const query = new URLSearchParams(paramsData);
+      const res = await fetch(`/api/categories/?${query}`, {
         method: "GET",
         signal: controller.signal,
       });
@@ -54,7 +58,8 @@ const useGetCategories = (): UseGetCategoryReturn => {
       if (!controller.signal.aborted) {
         setCategories(data);
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error fetching categories:", error);
       if (!controller.signal.aborted) {
         setCategoriesError(true);
       }

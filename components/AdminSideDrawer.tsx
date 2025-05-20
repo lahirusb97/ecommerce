@@ -87,7 +87,7 @@ export function AdminSideDrawer() {
   const handleLinkClick = () => setDrawerOpen(false);
 
   return (
-    <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+    <Drawer direction="left" open={drawerOpen} onOpenChange={setDrawerOpen}>
       <DrawerTrigger asChild>
         <button
           aria-label="Open sidebar"

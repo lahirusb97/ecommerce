@@ -4834,6 +4834,7 @@ export namespace Prisma {
 
   export type ProductMinAggregateOutputType = {
     id: bigint | null
+    slug: string | null
     name: string | null
     description: string | null
     categoryId: bigint | null
@@ -4844,6 +4845,7 @@ export namespace Prisma {
 
   export type ProductMaxAggregateOutputType = {
     id: bigint | null
+    slug: string | null
     name: string | null
     description: string | null
     categoryId: bigint | null
@@ -4854,6 +4856,7 @@ export namespace Prisma {
 
   export type ProductCountAggregateOutputType = {
     id: number
+    slug: number
     name: number
     description: number
     categoryId: number
@@ -4878,6 +4881,7 @@ export namespace Prisma {
 
   export type ProductMinAggregateInputType = {
     id?: true
+    slug?: true
     name?: true
     description?: true
     categoryId?: true
@@ -4888,6 +4892,7 @@ export namespace Prisma {
 
   export type ProductMaxAggregateInputType = {
     id?: true
+    slug?: true
     name?: true
     description?: true
     categoryId?: true
@@ -4898,6 +4903,7 @@ export namespace Prisma {
 
   export type ProductCountAggregateInputType = {
     id?: true
+    slug?: true
     name?: true
     description?: true
     categoryId?: true
@@ -4995,6 +5001,7 @@ export namespace Prisma {
 
   export type ProductGroupByOutputType = {
     id: bigint
+    slug: string
     name: string
     description: string | null
     categoryId: bigint
@@ -5024,6 +5031,7 @@ export namespace Prisma {
 
   export type ProductSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    slug?: boolean
     name?: boolean
     description?: boolean
     categoryId?: boolean
@@ -5041,6 +5049,7 @@ export namespace Prisma {
 
   export type ProductSelectScalar = {
     id?: boolean
+    slug?: boolean
     name?: boolean
     description?: boolean
     categoryId?: boolean
@@ -5049,7 +5058,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "categoryId" | "brandId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "name" | "description" | "categoryId" | "brandId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     brand?: boolean | Product$brandArgs<ExtArgs>
@@ -5068,6 +5077,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      slug: string
       name: string
       description: string | null
       categoryId: bigint
@@ -5448,6 +5458,7 @@ export namespace Prisma {
    */
   interface ProductFieldRefs {
     readonly id: FieldRef<"Product", 'BigInt'>
+    readonly slug: FieldRef<"Product", 'String'>
     readonly name: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
     readonly categoryId: FieldRef<"Product", 'BigInt'>
@@ -10843,6 +10854,7 @@ export namespace Prisma {
 
   export const ProductScalarFieldEnum: {
     id: 'id',
+    slug: 'slug',
     name: 'name',
     description: 'description',
     categoryId: 'categoryId',
@@ -10946,6 +10958,7 @@ export namespace Prisma {
 
 
   export const ProductOrderByRelevanceFieldEnum: {
+    slug: 'slug',
     name: 'name',
     description: 'description'
   };
@@ -11249,6 +11262,7 @@ export namespace Prisma {
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
     id?: BigIntFilter<"Product"> | bigint | number
+    slug?: StringFilter<"Product"> | string
     name?: StringFilter<"Product"> | string
     description?: StringNullableFilter<"Product"> | string | null
     categoryId?: BigIntFilter<"Product"> | bigint | number
@@ -11263,6 +11277,7 @@ export namespace Prisma {
 
   export type ProductOrderByWithRelationInput = {
     id?: SortOrder
+    slug?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     categoryId?: SortOrder
@@ -11278,6 +11293,7 @@ export namespace Prisma {
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    slug?: string
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
@@ -11291,10 +11307,11 @@ export namespace Prisma {
     brand?: XOR<BrandNullableScalarRelationFilter, BrandWhereInput> | null
     variants?: ProductVariantListRelationFilter
     productCategories?: ProductCategoryListRelationFilter
-  }, "id">
+  }, "id" | "slug">
 
   export type ProductOrderByWithAggregationInput = {
     id?: SortOrder
+    slug?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     categoryId?: SortOrder
@@ -11313,6 +11330,7 @@ export namespace Prisma {
     OR?: ProductScalarWhereWithAggregatesInput[]
     NOT?: ProductScalarWhereWithAggregatesInput | ProductScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"Product"> | bigint | number
+    slug?: StringWithAggregatesFilter<"Product"> | string
     name?: StringWithAggregatesFilter<"Product"> | string
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     categoryId?: BigIntWithAggregatesFilter<"Product"> | bigint | number
@@ -11818,6 +11836,7 @@ export namespace Prisma {
 
   export type ProductCreateInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -11830,6 +11849,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     categoryId: bigint | number
@@ -11842,6 +11862,7 @@ export namespace Prisma {
 
   export type ProductUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11854,6 +11875,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -11866,6 +11888,7 @@ export namespace Prisma {
 
   export type ProductCreateManyInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     categoryId: bigint | number
@@ -11876,6 +11899,7 @@ export namespace Prisma {
 
   export type ProductUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11884,6 +11908,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -12518,6 +12543,7 @@ export namespace Prisma {
 
   export type ProductCountOrderByAggregateInput = {
     id?: SortOrder
+    slug?: SortOrder
     name?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
@@ -12534,6 +12560,7 @@ export namespace Prisma {
 
   export type ProductMaxOrderByAggregateInput = {
     id?: SortOrder
+    slug?: SortOrder
     name?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
@@ -12544,6 +12571,7 @@ export namespace Prisma {
 
   export type ProductMinOrderByAggregateInput = {
     id?: SortOrder
+    slug?: SortOrder
     name?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
@@ -13780,6 +13808,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutCategoryInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -13791,6 +13820,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     brandId?: bigint | number | null
@@ -13913,6 +13943,7 @@ export namespace Prisma {
     OR?: ProductScalarWhereInput[]
     NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
     id?: BigIntFilter<"Product"> | bigint | number
+    slug?: StringFilter<"Product"> | string
     name?: StringFilter<"Product"> | string
     description?: StringNullableFilter<"Product"> | string | null
     categoryId?: BigIntFilter<"Product"> | bigint | number
@@ -13947,6 +13978,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutBrandInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -13958,6 +13990,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateWithoutBrandInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     categoryId: bigint | number
@@ -14376,6 +14409,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutVariantsInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -14387,6 +14421,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateWithoutVariantsInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     categoryId: bigint | number
@@ -14436,6 +14471,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutVariantsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14447,6 +14483,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateWithoutVariantsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -14614,6 +14651,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutProductCategoriesInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -14625,6 +14663,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateWithoutProductCategoriesInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     categoryId: bigint | number
@@ -14681,6 +14720,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutProductCategoriesInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14692,6 +14732,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateWithoutProductCategoriesInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -14747,6 +14788,7 @@ export namespace Prisma {
 
   export type ProductCreateManyCategoryInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     brandId?: bigint | number | null
@@ -14793,6 +14835,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutCategoryInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14804,6 +14847,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -14815,6 +14859,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -14836,6 +14881,7 @@ export namespace Prisma {
 
   export type ProductCreateManyBrandInput = {
     id?: bigint | number
+    slug: string
     name: string
     description?: string | null
     categoryId: bigint | number
@@ -14845,6 +14891,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutBrandInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14856,6 +14903,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateWithoutBrandInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -14867,6 +14915,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateManyWithoutBrandInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    slug?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: BigIntFieldUpdateOperationsInput | bigint | number
