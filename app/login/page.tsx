@@ -1,7 +1,7 @@
 // app/login/page.tsx
 
-import { LoginForm } from "@/components/login-form";
+import CustomerLoginFormClient from "@/components/CustomerLoginForm";
 
 export default function page() {
-  return <LoginForm />;
+  return <CustomerLoginFormClient authenticated={false} />;
 }

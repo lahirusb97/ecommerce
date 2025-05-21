@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 interface Category {
   id: string;
   name: string;
@@ -92,8 +93,12 @@ export function CustomerNav({ categories }: CustomerNavProps) {
             )}
           </div>
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary">Login</NavbarButton>
-            <NavbarButton variant="primary">Book a call</NavbarButton>
+            <Link href="/admin-login">
+              <Button variant="secondary">Admin Login</Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="secondary">Customer Login</Button>
+            </Link>
           </div>
         </NavBody>
 
@@ -138,19 +143,30 @@ export function CustomerNav({ categories }: CustomerNavProps) {
               </div>
             ))}
             <div className="flex w-full flex-col gap-4 mt-2">
+              <Link href="/login">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Customer Login
+                </NavbarButton>
+              </Link>
+              <Link href="/admin-login">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Admin Login
+                </NavbarButton>
+              </Link>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full"
               >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
+                Admin Login
               </NavbarButton>
             </div>
           </MobileNavMenu>

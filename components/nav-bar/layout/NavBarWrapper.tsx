@@ -44,7 +44,7 @@ export default async function NavBarWrapper() {
       {payload?.role === "ADMIN" ? (
         <div>
           {/* <AdminNav /> */}
-          <CustomerNav categories={navCategories} />
+          <AdminNav />
         </div>
       ) : (
         <CustomerNav categories={navCategories} />

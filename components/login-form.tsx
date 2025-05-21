@@ -11,21 +11,42 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 import { loginAction, LoginFormState } from "@/app/login/LoginAction";
+import Link from "next/link";
 
 const initialState: LoginFormState = { success: false, message: "" };
 
-export function LoginForm() {
+export default function LoginPageClient({
+  authenticated,
+}: {
+  authenticated: boolean;
+}) {
   const [state, formAction, pending] = useActionState(
     loginAction,
     initialState
   );
+  if (authenticated) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Card>
+          <CardContent className="p-8 text-center">
+            <p className="text-lg font-semibold">
+              You are already logged in.{" "}
+              <Button variant="secondary" className="mt-4" asChild>
+                <Link href="/">Go back to home page</Link>
+              </Button>
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <Card className="w-full max-w-sm shadow-2xl rounded-2xl border">
         <CardHeader>
           <h1 className="text-2xl font-bold text-center">
-            Sign in to your account
+            Sign in to your Admin account
           </h1>
         </CardHeader>
         <form action={formAction} autoComplete="off">
@@ -80,9 +101,9 @@ export function LoginForm() {
             </Button>
             <span className="text-center text-xs text-muted-foreground">
               Don’t have an account?{" "}
-              <a href="/singup" className="underline">
+              <Link href="/singup" className="underline">
                 Register
-              </a>
+              </Link>
             </span>
           </CardFooter>
         </form>

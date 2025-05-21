@@ -1,116 +1,167 @@
-generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
-}
+  generator client {
+    provider = "prisma-client-js"
+    output   = "../lib/generated/prisma"
+  }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
+  datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+  }
 
-enum user_role {
-  CUSTOMER
-  ADMIN
-  SUPERADMIN
-}
+  enum user_role {
+    CUSTOMER
+    ADMIN
+    SUPERADMIN
+  }
 
-model User {
-  id        BigInt      @id @default(autoincrement())
-  name      String?
-  email     String?     @unique(map: "User_email_key")
-  password  String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  phone     String?     @unique(map: "User_phone_key")
-  role      user_role   @default(CUSTOMER)
-}
+  model User {
+    id        BigInt      @id @default(autoincrement())
+    name      String?
+    email     String?     @unique(map: "User_email_key")
+    password  String
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    phone     String?     @unique(map: "User_phone_key")
+    role      user_role   @default(CUSTOMER)
 
-enum category_status {
-  ACTIVE
-  INACTIVE
-}
+    Order Order[]
+  }
 
-model Category {
-  id         BigInt      @id @default(autoincrement())
-  name       String
-  slug       String      @unique
-  parentId   BigInt?
-  parent     Category?   @relation("CategoryToParent", fields: [parentId], references: [id])
-  children   Category[]  @relation("CategoryToParent")
-  products   Product[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  status     category_status @default(ACTIVE)
-  productCategories ProductCategory[]
-}
+  enum category_status {
+    ACTIVE
+    INACTIVE
+  }
 
-model Brand {
-  id        BigInt      @id @default(autoincrement())
-  name      String
-  slug      String      @unique
-  products  Product[]
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-}
+  model Category {
+    id         BigInt      @id @default(autoincrement())
+    name       String
+    slug       String      @unique
+    parentId   BigInt?
+    parent     Category?   @relation("CategoryToParent", fields: [parentId], references: [id])
+    children   Category[]  @relation("CategoryToParent")
+    products   Product[]
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+    status     category_status @default(ACTIVE)
+    productCategories ProductCategory[]
+  }
 
-model Product {
-  id          BigInt          @id @default(autoincrement())
-  slug        String          @unique
-  name        String
-  description String?
-  categoryId  BigInt
-  category    Category        @relation(fields: [categoryId], references: [id])
-  brandId     BigInt?
-  brand       Brand?          @relation(fields: [brandId], references: [id])
-  variants    ProductVariant[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  productCategories ProductCategory[]
-}
+  model Brand {
+    id        BigInt      @id @default(autoincrement())
+    name      String
+    slug      String      @unique
+    products  Product[]
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+  }
 
-model VariantOption {
-  id      BigInt                 @id @default(autoincrement())
-  name    String  @unique
-  values  VariantOptionValue[]
-  variantValues ProductVariantValue[]
-}
+  model Product {
+    id          BigInt          @id @default(autoincrement())
+    slug        String          @unique
+    name        String
+    description String?
+    categoryId  BigInt
+    category    Category        @relation(fields: [categoryId], references: [id])
+    brandId     BigInt?
+    brand       Brand?          @relation(fields: [brandId], references: [id])
+    variants    ProductVariant[]
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
+    productCategories ProductCategory[]
 
-model VariantOptionValue {
-  id             BigInt         @id @default(autoincrement())
-  optionId       BigInt
-  option         VariantOption  @relation(fields: [optionId], references: [id])
-  value          String
-  variantValues  ProductVariantValue[]
-}
+    OrderItem OrderItem[]
+  }
 
-model ProductVariant {
-  id          BigInt                 @id @default(autoincrement())
-  productId   BigInt
-  product     Product                @relation(fields: [productId], references: [id])
-  sku         String                 @unique
-  price       Decimal                @db.Decimal(10,2)
-  stockQty    Int
-  imageUrl    String?
-  values      ProductVariantValue[]
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
-}
+  model VariantOption {
+    id      BigInt                 @id @default(autoincrement())
+    name    String  @unique
+    values  VariantOptionValue[]
+    variantValues ProductVariantValue[]
+  }
 
-model ProductVariantValue {
-  id                BigInt               @id @default(autoincrement())
-  variantId         BigInt
-  variant           ProductVariant       @relation(fields: [variantId], references: [id])
-  optionId          BigInt
-  option            VariantOption        @relation(fields: [optionId], references: [id])
-  valueId           BigInt
-  value             VariantOptionValue   @relation(fields: [valueId], references: [id])
-}
+  model VariantOptionValue {
+    id             BigInt         @id @default(autoincrement())
+    optionId       BigInt
+    option         VariantOption  @relation(fields: [optionId], references: [id])
+    value          String
+    variantValues  ProductVariantValue[]
+  }
 
-model ProductCategory {
-  productId  BigInt
-  product    Product  @relation(fields: [productId], references: [id])
-  categoryId BigInt
-  category   Category @relation(fields: [categoryId], references: [id])
+  model ProductVariant {
+    id          BigInt                 @id @default(autoincrement())
+    productId   BigInt
+    product     Product                @relation(fields: [productId], references: [id])
+    sku         String                 @unique
+    price       Decimal                @db.Decimal(10,2)
+    stockQty    Int
+    imageUrl    String?
+    values      ProductVariantValue[]
+    createdAt   DateTime               @default(now())
+    updatedAt   DateTime               @updatedAt
 
-  @@id([productId, categoryId])
-}
+    OrderItem OrderItem[]
+  }
+
+  model ProductVariantValue {
+    id                BigInt               @id @default(autoincrement())
+    variantId         BigInt
+    variant           ProductVariant       @relation(fields: [variantId], references: [id])
+    optionId          BigInt
+    option            VariantOption        @relation(fields: [optionId], references: [id])
+    valueId           BigInt
+    value             VariantOptionValue   @relation(fields: [valueId], references: [id])
+  }
+
+  model ProductCategory {
+    productId  BigInt
+    product    Product  @relation(fields: [productId], references: [id])
+    categoryId BigInt
+    category   Category @relation(fields: [categoryId], references: [id])
+
+    @@id([productId, categoryId])
+  }
+
+  enum order_status {
+    PENDING
+    PAID
+    SHIPPED
+    COMPLETED
+    CANCELLED
+  }
+
+  model Order {
+    id           BigInt        @id @default(autoincrement())
+    userId       BigInt
+    user         User          @relation(fields: [userId], references: [id])
+    status       order_status  @default(PENDING)
+    total        Decimal       @db.Decimal(10,2)
+    paidAmount   Decimal?      @db.Decimal(10,2)
+    paymentId    String?       // Stripe session/payment ID
+    paymentMethod String?      // "stripe", "cash", etc.
+    address      String?       // or use a relation for shipping
+    note         String?
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+
+    items        OrderItem[]
+  }
+
+  model OrderItem {
+    id           BigInt         @id @default(autoincrement())
+    orderId      BigInt
+    order        Order          @relation(fields: [orderId], references: [id])
+    productId    BigInt
+    product      Product        @relation(fields: [productId], references: [id])
+    variantId    BigInt
+    variant      ProductVariant @relation(fields: [variantId], references: [id])
+    name         String
+    sku          String
+    price        Decimal        @db.Decimal(10,2) // price at time of order
+    quantity     Int
+    imageUrl     String?
+    options      Json?          // For size/color etc
+
+    // (Optional) Store brand, category snapshot for reporting
+    brand        String?
+    category     String?
+  }

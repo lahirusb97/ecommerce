@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-
+import { useCart } from "@/context/CartContext";
 // Only read from product prop, useState(0) is safe!
 export default function ProductViewPage({
   product,
@@ -14,7 +14,7 @@ export default function ProductViewPage({
 }) {
   const [selected, setSelected] = useState(0);
   const variant = product.variants[selected];
-
+  const { addToCart } = useCart();
   return (
     <div className="max-w-5xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-2 gap-10">
       {/* Left: Image & thumbnails */}
@@ -104,6 +104,9 @@ export default function ProductViewPage({
           size="lg"
           className="w-full mt-6"
           disabled={variant.stockQty <= 0}
+          onClick={() => {
+            addToCart(product, 1, variant);
+          }}
         >
           {variant.stockQty > 0 ? "Add to Cart" : "Out of Stock"}
         </Button>

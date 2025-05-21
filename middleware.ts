@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   // 🔒 Redirect signed-in users away from /login
   if (pathname === "/login") {
     if (payload?.role === "CUSTOMER") {
-      return NextResponse.redirect(new URL("/myaccount", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
     if (payload?.role === "ADMIN") {
       return NextResponse.redirect(new URL("/admin/dashboard", request.url));
@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
 
   // 🚫 Prevent customers accessing admin
   if (pathname.startsWith("/admin") && payload?.role === "CUSTOMER") {
-    return NextResponse.redirect(new URL("/myaccount", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   // 🚫 Only admins can access /admin

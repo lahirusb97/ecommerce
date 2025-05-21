@@ -1,10 +1,19 @@
-import { LoginForm } from "@/components/login-form";
-import React from "react";
+import { cookies } from "next/headers";
+import { verifyJwt } from "@/lib/jwtToken";
+import LoginPageClient from "@/components/login-form";
 
-export default function page() {
-  return (
-    <div>
-      <LoginForm />
-    </div>
-  );
+// This runs ONLY on the server!
+export default async function page() {
+  const token = (await cookies()).get("token")?.value;
+  let authenticated = false;
+  if (token) {
+    try {
+      const payload = await verifyJwt(token);
+      authenticated = !!payload;
+    } catch {
+      authenticated = false;
+    }
+  }
+
+  return <LoginPageClient authenticated={authenticated} />;
 }

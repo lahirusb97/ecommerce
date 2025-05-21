@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Drawer,
@@ -15,20 +15,23 @@ import {
   Menu,
   LayoutDashboard,
   Package,
-  Box,
   List,
   Tags,
-  Users,
-  Layers,
-  BarChart2,
-  Settings,
-  UserCog,
-  ChevronDown,
   LayoutGrid,
+  ChevronDown,
+  LogOut,
 } from "lucide-react";
 
-// Navigation config (same as previous)
-const nav = [
+// Types for navigation
+type NavItem = {
+  label: string;
+  href?: string;
+  icon: React.ElementType;
+  children?: { label: string; href: string; icon: React.ElementType }[];
+};
+
+// Navigation config
+const nav: NavItem[] = [
   {
     label: "Dashboard",
     href: "/admin",
@@ -40,51 +43,49 @@ const nav = [
     icon: Package,
   },
   {
-    label: "Products",
-    icon: Box,
-    children: [
-      { label: "All Products", href: "/admin/products", icon: List },
-      { label: "Add Product", href: "/admin/products/new", icon: Tags },
-      { label: "Categories", href: "/admin/categories", icon: List },
-      { label: "Brands", href: "/admin/brands", icon: Tags },
-      {
-        label: "Variants",
-        href: "/admin/products/variant",
-        icon: LayoutGrid,
-      },
-    ],
+    label: "All Products",
+    href: "/admin/products",
+    icon: List,
   },
   {
-    label: "Customers",
-    href: "/admin/customers",
-    icon: Users,
+    label: "Add Product",
+    href: "/admin/products/new",
+    icon: Tags,
   },
   {
-    label: "Inventory",
-    href: "/admin/inventory",
-    icon: Layers,
+    label: "Categories",
+    href: "/admin/categories",
+    icon: List,
   },
   {
-    label: "Reports",
-    href: "/admin/reports",
-    icon: BarChart2,
+    label: "Brands",
+    href: "/admin/brands",
+    icon: Tags,
   },
   {
-    label: "Settings",
-    icon: Settings,
-    children: [
-      { label: "Profile", href: "/admin/settings/profile", icon: UserCog },
-    ],
+    label: "Variants",
+    href: "/admin/products/variant",
+    icon: LayoutGrid,
   },
+  // Add children array for sections with sub-links if needed.
 ];
 
 export function AdminSideDrawer() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   // For closing drawer when a link is clicked
   const handleLinkClick = () => setDrawerOpen(false);
+
+  // Logout handler
+  const handleLogout = async () => {
+    setDrawerOpen(false);
+    // Adjust according to your auth method.
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    router.push("/admin-login");
+  };
 
   return (
     <Drawer direction="left" open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -98,8 +99,8 @@ export function AdminSideDrawer() {
       </DrawerTrigger>
       <DrawerContent className="p-0 w-72 min-h-screen max-w-full z-50">
         <DrawerTitle className="hidden">Admin Sidebar Navigation</DrawerTitle>
-        <Card className="h-screen border-none rounded-none shadow-none">
-          <nav className="flex flex-col gap-1 py-4 px-2">
+        <Card className="h-screen border-none rounded-none shadow-none flex flex-col">
+          <nav className="flex flex-col gap-1 py-4 px-2 flex-1">
             {nav.map((item) =>
               item.children ? (
                 <div key={item.label}>
@@ -146,7 +147,7 @@ export function AdminSideDrawer() {
                 </div>
               ) : (
                 <Link
-                  href={item.href}
+                  href={item.href!}
                   key={item.label}
                   className={cn(
                     "flex items-center px-3 py-2 rounded-xl text-base gap-2 hover:bg-muted transition",
@@ -160,6 +161,14 @@ export function AdminSideDrawer() {
               )
             )}
           </nav>
+          {/* Logout button */}
+          <button
+            onClick={handleLogout}
+            className="m-4 flex items-center gap-2 px-3 py-2 rounded-xl text-base font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 transition"
+          >
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
         </Card>
       </DrawerContent>
     </Drawer>
