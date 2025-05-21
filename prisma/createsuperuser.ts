@@ -31,12 +31,12 @@ async function main() {
       name,
       email,
       password: hashedPassword,
-      role: "SUPERADMIN",
+      role: "ADMIN",
       phone,
     },
   });
 
-  console.log("Superadmin created:", {
+  console.log("ADMIN created:", {
     id: user.id,
     email: user.email,
     role: user.role,
