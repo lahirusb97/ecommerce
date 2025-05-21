@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 export default function ImageUpload() {
@@ -33,7 +34,7 @@ export default function ImageUpload() {
       {imgUrl && (
         <div>
           <p>Uploaded image:</p>
-          <img src={imgUrl} alt="Uploaded" style={{ maxWidth: 300 }} />
+          <Image src={imgUrl} alt="Uploaded" width={300} height={300} />
         </div>
       )}
       {error && <p style={{ color: "red" }}>{error}</p>}

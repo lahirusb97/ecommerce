@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/generated/prisma";
 
 // Helper to serialize BigInt to string for JSON
 function replacer(key: string, value: unknown) {
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get("search");
 
   // Build query filter
-  const where: any = {};
+  const where: Prisma.ProductWhereInput = {};
   if (categoryId) {
     where.categoryId = BigInt(categoryId);
   }
@@ -29,8 +30,8 @@ export async function GET(req: NextRequest) {
   }
   if (search) {
     where.OR = [
-      { name: { contains: search, mode: "insensitive" } },
-      { slug: { contains: search, mode: "insensitive" } },
+      { name: { contains: search } },
+      { slug: { contains: search } },
       // Add other fields for search if needed
     ];
   }

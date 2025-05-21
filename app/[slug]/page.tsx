@@ -1,14 +1,15 @@
-// app/products/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import { ProductModel } from "@/model/ProductModels";
 import ProductViewPage from "@/components/ProductViewPage";
+import type { ProductModel } from "@/model/ProductModels";
 
-export default async function Page({ params }: { params: { slug: string } }) {
+type Params = { slug: string };
+
+// The recommended type for App Router page component
+export default async function Page({ params }: { params: Params }) {
   const res = await fetch(`${process.env.BASE_URL}product/${params.slug}`, {
     cache: "no-store",
   });
   if (!res.ok) notFound();
   const product: ProductModel = await res.json();
-  // Pass product as prop, unmodified
   return <ProductViewPage product={product} />;
 }

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { verifyJwt } from "@/lib/jwtToken";
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
 export default async function OrdersPage() {
   // 1. Auth check
@@ -79,9 +80,11 @@ export default async function OrdersPage() {
                       {order.items.map((item, idx) => (
                         <li key={idx} className="py-2 flex items-center gap-3">
                           {item.imageUrl && (
-                            <img
+                            <Image
                               src={item.imageUrl}
                               alt={item.name}
+                              width={56}
+                              height={56}
                               className="w-10 h-10 rounded object-cover border"
                             />
                           )}

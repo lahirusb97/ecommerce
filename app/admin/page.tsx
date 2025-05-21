@@ -2,18 +2,18 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
-import { DollarSign, Users, ShoppingCart, Package } from "lucide-react";
+import { Users, ShoppingCart, Package } from "lucide-react";
 import RecentOrdersTable from "@/components/ui/RecentOrdersTable";
 
 export default async function DashboardPage() {
   // Fetch counts from DB (SSR, no flicker)
-  const [productCount, orderCount, customerCount, totalSales] =
-    await Promise.all([
-      prisma.product.count(),
-      // prisma.order.count(),
-      prisma.user.count(),
-      // prisma.order.aggregate({ _sum: { total: true } }),
-    ]);
+
+  const [productCount, orderCount, customerCount] = await Promise.all([
+    prisma.product.count(),
+    prisma.order.count(),
+    prisma.user.count(),
+    // prisma.order.aggregate({ _sum: { total: true } }),
+  ]);
 
   return (
     <div className="px-6 py-8">

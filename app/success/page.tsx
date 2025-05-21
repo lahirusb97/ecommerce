@@ -6,13 +6,39 @@ import { Badge } from "@/components/ui/badge"; // optional
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-
+interface StripeLineItem {
+  id: string;
+  quantity: number;
+  description: string;
+  amount_total: number;
+  price: {
+    product: {
+      images: string[];
+      metadata?: {
+        brand?: string;
+        category?: string;
+      };
+    };
+  };
+}
+interface StripeSession {
+  id: string;
+  amount_total: number;
+  currency: string;
+  customer_details?: {
+    name?: string;
+    email?: string;
+  };
+  line_items?: {
+    data: StripeLineItem[];
+  };
+}
 export default function SuccessPage() {
   const { clearCart } = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<StripeSession | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +57,7 @@ export default function SuccessPage() {
   useEffect(() => {
     if (session) clearCart();
     // Only clear when session is present, so we don’t empty the cart for accidental visits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   if (loading)
@@ -44,7 +71,7 @@ export default function SuccessPage() {
 
   // Format amounts (Stripe is in cents)
   const formatPrice = (amount: number, currency: string) =>
-    `Rs. ${(amount / 100).toLocaleString("en-LK")}`;
+    `${currency} ${(amount / 100).toLocaleString("en-LK")}`;
 
   return (
     <div className="max-w-2xl mx-auto mt-16 p-6 bg-white rounded-lg shadow border">
@@ -73,7 +100,7 @@ export default function SuccessPage() {
         <div className="mb-2 font-semibold">Order:</div>
         {session.line_items && (
           <ul className="space-y-3">
-            {session.line_items.data.map((item: any) => (
+            {session.line_items.data.map((item: StripeLineItem) => (
               <li
                 key={item.id}
                 className="flex items-center gap-4 bg-gray-50 rounded p-2"

@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export function ProductImageUploader({
   value,
@@ -61,7 +62,13 @@ export function ProductImageUploader({
       </Button>
 
       {value && (
-        <img src={value} alt="variant" width={60} className="rounded shadow" />
+        <Image
+          src={value}
+          alt="variant"
+          width={60}
+          height={60}
+          className="rounded shadow"
+        />
       )}
     </div>
   );
