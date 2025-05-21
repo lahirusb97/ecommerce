@@ -1,4 +1,6 @@
-import { HeroParallax } from "@/components/ui/hero-parallax";
+import { HeroCarousel } from "@/components/Herosection";
+import { ProductCard } from "@/components/ProductCard";
+import { ProductModel } from "@/model/ProductModels";
 import React from "react";
 
 export default async function Home() {
@@ -9,10 +11,12 @@ export default async function Home() {
   console.log(data);
   return (
     <div>
-      <HeroParallax products={data.products} />
-      {/* {data.products.map((product: any) => (
+      <HeroCarousel />
+      <div className="flex flex-wrap gap-4 justify-evenly">
+        {data.products.map((product: ProductModel) => (
           <ProductCard key={product.id} product={product} />
-        ))} */}
+        ))}
+      </div>
     </div>
   );
 }

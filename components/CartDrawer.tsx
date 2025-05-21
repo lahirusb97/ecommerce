@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area"; // (optional for scrollable content)
 import { Minus, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function CartDrawer({
   open,
@@ -22,22 +23,13 @@ export function CartDrawer({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
+  const router = useRouter();
   const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const handleCheckout = async () => {
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart }),
-    });
-    const data = await res.json();
-    if (data.url) {
-      // Redirect to Stripe Checkout
-      window.location.href = data.url;
-    } else {
-      alert(data.error || "Failed to start checkout.");
-    }
+    //navigate to checkout
+    router.push("/checkout");
   };
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

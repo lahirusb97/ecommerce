@@ -1,10 +1,14 @@
 import { AdminSideDrawer } from "@/components/AdminSideDrawer";
 import React from "react";
 
-export default function AdminNav() {
+interface AdminNavProps {
+  isLogin: boolean;
+}
+
+export default function AdminNav({ isLogin }: AdminNavProps) {
   return (
     <div>
-      <AdminSideDrawer />
+      <AdminSideDrawer isLogin={isLogin} />
       {/* <NavBar /> */}
     </div>
   );

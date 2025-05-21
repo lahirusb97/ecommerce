@@ -18,6 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { LogOut, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 interface Category {
   id: string;
   name: string;
@@ -27,10 +29,18 @@ interface Category {
 
 interface CustomerNavProps {
   categories: Category[];
+  isLogin: boolean;
 }
 
-export function CustomerNav({ categories }: CustomerNavProps) {
+export function CustomerNav({ categories, isLogin }: CustomerNavProps) {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Logout handler
+  const handleLogout = async () => {
+    // Adjust according to your auth method.
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    router.push("/login");
+  };
 
   return (
     <div className="relative w-full">
@@ -92,14 +102,34 @@ export function CustomerNav({ categories }: CustomerNavProps) {
               )
             )}
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/admin-login">
-              <Button variant="secondary">Admin Login</Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="secondary">Customer Login</Button>
-            </Link>
-          </div>
+          {!isLogin && (
+            <div className="flex items-center gap-4">
+              <Link href="/admin-login">
+                <Button variant="secondary">Admin Login</Button>
+              </Link>
+              <Link href="/login">
+                <Button variant="secondary">Customer Login</Button>
+              </Link>
+            </div>
+          )}
+
+          {isLogin && (
+            <>
+              <Link href="/myaccount">
+                <Button variant="secondary">
+                  <User />
+                  My Account
+                </Button>
+              </Link>
+              <Button
+                onClick={handleLogout}
+                className="m-4 flex items-center gap-2 px-3 py-2 rounded-xl text-base font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 transition"
+              >
+                <LogOut className="w-5 h-5" />
+                Logout
+              </Button>
+            </>
+          )}
         </NavBody>
 
         {/* Mobile Navigation */}
@@ -142,17 +172,27 @@ export function CustomerNav({ categories }: CustomerNavProps) {
                 )}
               </div>
             ))}
-            <div className="flex w-full flex-col gap-4 mt-2">
-              <Link href="/login">
-                <NavbarButton
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variant="primary"
-                  className="w-full"
-                >
-                  Customer Login
-                </NavbarButton>
-              </Link>
-              <Link href="/admin-login">
+
+            {isLogin && (
+              <div className="flex w-full flex-col gap-4 mt-2">
+                <Link href="/login">
+                  <NavbarButton
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Customer Login
+                  </NavbarButton>
+                </Link>
+                <Link href="/admin-login">
+                  <NavbarButton
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Admin Login
+                  </NavbarButton>
+                </Link>
                 <NavbarButton
                   onClick={() => setIsMobileMenuOpen(false)}
                   variant="primary"
@@ -160,15 +200,17 @@ export function CustomerNav({ categories }: CustomerNavProps) {
                 >
                   Admin Login
                 </NavbarButton>
-              </Link>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
+              </div>
+            )}
+            {isLogin && (
+              <Button
+                onClick={handleLogout}
+                className="m-4 flex items-center gap-2 px-3 py-2 rounded-xl text-base font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 transition"
               >
-                Admin Login
-              </NavbarButton>
-            </div>
+                <LogOut className="w-5 h-5" />
+                Logout
+              </Button>
+            )}
           </MobileNavMenu>
         </MobileNav>
       </Navbar>

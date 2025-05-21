@@ -48,5 +48,6 @@ export const config = {
     "/myaccount/:path*",
     "/myaccount",
     "/login",
+    "/category/:path*",
   ],
 };

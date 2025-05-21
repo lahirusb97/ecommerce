@@ -24,7 +24,7 @@ export default async function NavBarWrapper() {
     orderBy: { name: "asc" },
   });
   function serializeCategory(
-    category: Category & { children: Category[] }
+    category: Category & { children?: Category[] }
   ): NavCategory {
     return {
       id: category.id.toString(),
@@ -32,11 +32,10 @@ export default async function NavBarWrapper() {
       slug: category.slug,
       status: category.status,
       parentId: category.parentId ? category.parentId.toString() : null,
-      children: category.children
-        ? category.children.map(serializeCategory)
-        : [],
+      children: (category.children ?? []).map(serializeCategory),
     };
   }
+
   const navCategories = categories.map(serializeCategory);
 
   return (
@@ -44,10 +43,10 @@ export default async function NavBarWrapper() {
       {payload?.role === "ADMIN" ? (
         <div>
           {/* <AdminNav /> */}
-          <AdminNav />
+          <AdminNav isLogin={!!payload} />
         </div>
       ) : (
-        <CustomerNav categories={navCategories} />
+        <CustomerNav isLogin={!!payload} categories={navCategories} />
       )}
     </div>
   );

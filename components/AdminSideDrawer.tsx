@@ -21,6 +21,7 @@ import {
   ChevronDown,
   LogOut,
 } from "lucide-react";
+import { Button } from "./ui/button";
 
 // Types for navigation
 type NavItem = {
@@ -70,7 +71,11 @@ const nav: NavItem[] = [
   // Add children array for sections with sub-links if needed.
 ];
 
-export function AdminSideDrawer() {
+interface AdminSideDrawerProps {
+  isLogin: boolean;
+}
+
+export function AdminSideDrawer({ isLogin }: AdminSideDrawerProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const pathname = usePathname();
@@ -162,13 +167,15 @@ export function AdminSideDrawer() {
             )}
           </nav>
           {/* Logout button */}
-          <button
-            onClick={handleLogout}
-            className="m-4 flex items-center gap-2 px-3 py-2 rounded-xl text-base font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 transition"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
+          {isLogin && (
+            <Button
+              onClick={handleLogout}
+              className="m-4 flex items-center gap-2 px-3 py-2 rounded-xl text-base font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 transition"
+            >
+              <LogOut className="w-5 h-5" />
+              Logout
+            </Button>
+          )}
         </Card>
       </DrawerContent>
     </Drawer>

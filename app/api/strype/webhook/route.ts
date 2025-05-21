@@ -1,37 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { prisma } from "@/lib/prisma";
 
-export const config = {
-  api: {
-    bodyParser: false, // This is required!
-  },
-};
-
+// Stripe instance
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-04-10",
 });
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export async function POST(req: NextRequest) {
-  // Stripe requires raw body for signature verification
-  const body = await req.arrayBuffer();
-  const sig = req.headers.get("stripe-signature") as string;
+  const sig = req.headers.get("stripe-signature");
+  const buf = await req.arrayBuffer();
 
-  let event;
-
+  let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
-      Buffer.from(body),
-      sig,
+      Buffer.from(buf),
+      sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
-    return new NextResponse("Webhook Error", { status: 400 });
+    return new NextResponse("Webhook signature verification failed", {
+      status: 400,
+    });
   }
 
+  // Handle successful payment
   if (event.type === "checkout.session.completed") {
-    // Your order creation logic here!
-    // See previous code samples for order snapshotting
+    const session = event.data.object as Stripe.Checkout.Session;
+    // Metadata should include your orderId as set in your checkout code
+    const orderId = session.metadata?.orderId;
+    if (orderId) {
+      // Update your order status to PAID, add payment info, etc.
+      await prisma.order.update({
+        where: { id: BigInt(orderId) },
+        data: {
+          status: "PAID", // Or your enum/status value
+          paidAmount: session.amount_total
+            ? session.amount_total / 100
+            : undefined,
+          paymentId: session.payment_intent as string,
+          paymentMethod: session.payment_method_types?.[0] ?? "stripe",
+          updatedAt: new Date(),
+        },
+      });
+    }
   }
 
   return NextResponse.json({ received: true });
