@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## ✨ Main Features
 
-## Getting Started
+### 🔒 Advanced Role-Based Authentication
+- **JWT authentication** using secure, httpOnly cookies
+- Middleware enforces access: only authorized roles (Admin, Customer) can access sensitive routes
+- Automatic route-based redirection for login and dashboard based on user role
+- Passwords stored securely with bcrypt hashing
 
-First, run the development server:
+### 👥 User & Role Management
+- Two main roles: **Admin** (full management access) and **Customer** (shopping and order access)
+- Admin-only dashboard and management tools
+- Customer-only account and order views
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 🛒 E-commerce Core
+- Product, category, brand, size, and color CRUD (Create, Read, Update, Delete)
+- Support for product variants and real-time stock management
+- Shopping cart, fast add/remove, and streamlined checkout
+- Order management with status tracking, invoice numbers, and notifications
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 💳 Payment Integration
+- **Stripe** integration for secure payment processing
+- Supports partial and final payments, plus webhook handling
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🏪 Multi-Branch & Inventory
+- Branch management: assign users to branches
+- Track inventory per branch and manage stock levels
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 📦 File/Image Management
+- Upload and manage product images with **Cloudinary**
+- Fast, mobile-optimized image delivery using next-cloudinary
 
-## Learn More
+### 📊 Expense & Financial Management
+- Expense category and subcategory CRUD
+- Daily summaries, reports, and analytics for admins
 
-To learn more about Next.js, take a look at the following resources:
+### 🖥️ Modern Frontend & UX/UI
+- Built with **Next.js 15** and **React 19** for speed and scalability
+- Beautiful UI using **shadcn/ui**, **Tailwind CSS**, and **Radix UI** primitives
+- Hero section carousel, product galleries, and responsive layouts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### ✅ Form & Data Validation
+- **React Hook Form** for type-safe forms
+- **Zod** for schema validation and error handling
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🛡️ Security & Best Practices
+- All tokens httpOnly (never exposed to JS), protecting against XSS
+- Strict role and authentication checks in every sensitive route
+- Uses latest TypeScript, ESLint, and dependency management
 
-## Deploy on Vercel
+### 🛠️ Dev Experience
+- Clean, modular codebase
+- Modern scripts (`createsuperuser`, lint, build, dev)
+- Easy to extend with your own features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Recruiter highlights:**
+- Advanced JWT auth & route middleware
+- Stripe payment & webhook integration
+- Cloudinary image/file management
+- Modern, accessible UI with shadcn/ui & Tailwind CSS
+- Robust e-commerce, branch, and inventory logic
+- TypeScript, Next.js, Prisma, and MySQL expertise
+
