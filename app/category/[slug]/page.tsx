@@ -3,8 +3,12 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { ProductCard } from "@/components/ProductCard";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  if (!params?.slug) {
+type PageParams = Promise<{ slug: string }>;
+
+export default async function Page({ params }: { params: PageParams }) {
+  const slug = (await params).slug;
+
+  if (!slug) {
     // No slug: show fallback UI
     return (
       <Card className="max-w-4xl mx-auto mt-10 p-6 text-center">
@@ -25,7 +29,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   // 1. Try to find the category by slug
   const category = await prisma.category.findUnique({
-    where: { slug: params.slug },
+    where: { slug: (await params).slug },
     select: { id: true, name: true },
   });
 

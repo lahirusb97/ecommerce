@@ -1,6 +1,5 @@
 import { HeroCarousel } from "@/components/Herosection";
-import { ProductCard } from "@/components/ProductCard";
-import { ProductModel } from "@/model/ProductModels";
+import { ProductCard, ProductWithAllRelations } from "@/components/ProductCard";
 import React from "react";
 
 export default async function Home() {
@@ -13,7 +12,7 @@ export default async function Home() {
     <div>
       <HeroCarousel />
       <div className="flex flex-wrap gap-4 justify-evenly">
-        {data.products.map((product: ProductModel) => (
+        {data.products.map((product: ProductWithAllRelations) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

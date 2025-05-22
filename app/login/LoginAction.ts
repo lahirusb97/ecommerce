@@ -60,7 +60,7 @@ export async function loginAction(
     };
 
   // Generate and set JWT
-  const token = await signJwt({ userId: Number(user.id), role: user.role });
+  const token = await signJwt({ userId: BigInt(user.id), role: user.role });
   (await cookies()).set("token", token, {
     httpOnly: true,
     path: "/",

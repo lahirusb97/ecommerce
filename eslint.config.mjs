@@ -14,7 +14,6 @@ const eslintConfig = [
   {
     ignores: [
       "lib/generated/**", // <-- This tells flat config to ignore these files
-      ".next/**",
     ],
   },
 ];

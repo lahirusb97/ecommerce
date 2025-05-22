@@ -3,6 +3,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useMotionTemplate, useMotionValue, motion } from "motion/react";
 
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+
 const Input = React.forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement>

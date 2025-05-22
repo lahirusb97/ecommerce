@@ -9,9 +9,9 @@ function replacer(key: string, value: unknown) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const slug = params.slug;
+  const slug = (await params).slug;
 
   // Fetch the product by slug
   const product = await prisma.product.findUnique({

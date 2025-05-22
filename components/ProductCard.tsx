@@ -11,10 +11,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 
-import { ProductModel } from "@/model/ProductModels";
-
+import { Prisma } from "@/lib/generated/prisma";
+export type ProductWithAllRelations = Prisma.ProductGetPayload<{
+  include: {
+    category: true;
+    brand: true;
+    variants: {
+      include: {
+        values: {
+          include: {
+            option: true;
+            value: true;
+          };
+        };
+        OrderItem: true;
+      };
+    };
+    productCategories: {
+      include: {
+        category: true;
+      };
+    };
+    OrderItem: true;
+  };
+}>;
 export interface ProductCardProps {
-  product: ProductModel;
+  product: ProductWithAllRelations;
 }
 export function ProductCard({ product }: ProductCardProps) {
   const variant = product.variants[0];
@@ -60,13 +82,13 @@ export function ProductCard({ product }: ProductCardProps) {
         {variant && (
           <div className="w-full flex flex-col items-center justify-center text-center space-y-1 px-1">
             <div className="text-primary font-semibold text-sm">
-              Rs. {parseInt(variant.price).toLocaleString()}
+              Rs. {parseInt(variant.price.toString()).toLocaleString()}
             </div>
-            {variant.options?.length > 0 && (
+            {variant.values?.length > 0 && (
               <div className="flex flex-wrap gap-1 justify-center">
-                {variant.options.map((opt, i) => (
+                {variant.values.map((opt, i) => (
                   <Badge key={i} variant="secondary" className="text-xs">
-                    {opt.optionName}: {opt.value}
+                    {opt.option.name}: {opt.value.value}
                   </Badge>
                 ))}
               </div>

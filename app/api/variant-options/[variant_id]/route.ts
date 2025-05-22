@@ -7,7 +7,7 @@ import { verifyJwt } from "@/lib/jwtToken";
 // --- PATCH: Update variant option ---
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { variant_id: string } }
+  { params }: { params: Promise<{ variant_id: string }> }
 ) {
   const token = req.cookies.get("token")?.value;
   const payload = token ? await verifyJwt(token) : null;
@@ -28,7 +28,7 @@ export async function PATCH(
 
   try {
     const updated = await prisma.variantOption.update({
-      where: { id: BigInt(params.variant_id) },
+      where: { id: BigInt((await params).variant_id) },
       data: parsed.data,
     });
     return NextResponse.json({ ...updated, id: updated.id.toString() });
@@ -63,7 +63,7 @@ export async function PATCH(
 // --- DELETE: Remove variant option ---
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { variant_id: string } }
+  { params }: { params: Promise<{ variant_id: string }> }
 ) {
   const token = req.cookies.get("token")?.value;
   const payload = token ? await verifyJwt(token) : null;
@@ -74,7 +74,7 @@ export async function DELETE(
 
   try {
     await prisma.variantOption.delete({
-      where: { id: BigInt(params.variant_id) },
+      where: { id: BigInt((await params).variant_id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {

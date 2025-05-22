@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Generate JWT
-  const token = await signJwt({ userId: Number(user.id), role: user.role });
+  const token = await signJwt({ userId: BigInt(user.id), role: user.role });
 
   // Set HttpOnly cookie
   const response = NextResponse.json({

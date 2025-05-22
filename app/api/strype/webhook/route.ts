@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 // Stripe instance
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-04-10",
+  apiVersion: "2025-04-30.basil",
 });
 
 export const config = {

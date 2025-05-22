@@ -4,8 +4,8 @@ import { useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
-import { singupAction } from "@/app/singup/singupAction";
-import { SchemaSingUpModel } from "@/schema/schemaSingUp";
+import { FormState, singupAction } from "@/app/singup/singupAction";
+
 import {
   Card,
   CardContent,
@@ -24,13 +24,6 @@ function SubmitButton() {
     </Button>
   );
 }
-
-type FormState = {
-  message?: string;
-  success: boolean;
-  formData?: SchemaSingUpModel;
-  errors?: Partial<Record<string, string>>;
-};
 
 const initialState: FormState = {
   message: "",
@@ -58,11 +51,16 @@ export function SignupForm() {
               id="name"
               name="name"
               placeholder="Aruna Kumara"
-              defaultValue={state.formData?.name || ""}
+              defaultValue={state.success ? "" : state.formData?.name || ""}
             />
-            {state.errors?.name && (
-              <p className="text-red-500 text-sm">{state.errors.name}</p>
-            )}
+
+            {!state.success &&
+              state.errors?.name &&
+              state.errors.name.length > 0 && (
+                <p className="text-red-500 text-sm">
+                  {state.errors.name.join(", ")}
+                </p>
+              )}
           </div>
 
           <div className="grid gap-2">
@@ -72,11 +70,15 @@ export function SignupForm() {
               name="email"
               type="email"
               placeholder="aruna@gmail.com"
-              defaultValue={state.formData?.email || ""}
+              defaultValue={state.success ? "" : state.formData?.email || ""}
             />
-            {state.errors?.email && (
-              <p className="text-red-500 text-sm">{state.errors.email}</p>
-            )}
+            {!state.success &&
+              state.errors?.email &&
+              state.errors.email.length > 0 && (
+                <p className="text-red-500 text-sm">
+                  {state.errors.email.join(", ")}
+                </p>
+              )}
           </div>
 
           <div className="grid gap-2">
@@ -86,11 +88,15 @@ export function SignupForm() {
               name="phone"
               type="tel"
               placeholder="0703456789"
-              defaultValue={state.formData?.phone || ""}
+              defaultValue={state.success ? "" : state.formData?.phone || ""}
             />
-            {state.errors?.phone && (
-              <p className="text-red-500 text-sm">{state.errors.phone}</p>
-            )}
+            {!state.success &&
+              state.errors?.phone &&
+              state.errors.phone.length > 0 && (
+                <p className="text-red-500 text-sm">
+                  {state.errors.phone.join(", ")}
+                </p>
+              )}
           </div>
 
           <div className="grid gap-2">
@@ -99,11 +105,15 @@ export function SignupForm() {
               id="password"
               name="password"
               type="password"
-              defaultValue={state.formData?.password || ""}
+              defaultValue={state.success ? "" : state.formData?.password || ""}
             />
-            {state.errors?.password && (
-              <p className="text-red-500 text-sm">{state.errors.password}</p>
-            )}
+            {!state.success &&
+              state.errors?.password &&
+              state.errors.password.length > 0 && (
+                <p className="text-red-500 text-sm">
+                  {state.errors.password.join(", ")}
+                </p>
+              )}
           </div>
           <CardFooter>
             {!state.success && (

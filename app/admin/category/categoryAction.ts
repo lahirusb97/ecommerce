@@ -29,5 +29,5 @@ export async function updateCategory({
       parentId: parentId ? BigInt(parentId) : null,
     },
   });
-  revalidatePath("/admin/categories");
+  revalidatePath("/admin/category");
 }

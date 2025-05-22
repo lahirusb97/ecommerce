@@ -1,6 +1,6 @@
 "use server";
 
-import { schemaSingUp, SchemaSingUpModel } from "@/schema/schemaSingUp";
+import { schemaSignUp, SchemaSignUpModel } from "@/schema/schemaSingUp";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
@@ -12,8 +12,8 @@ export type FormState =
   | {
       success: false;
       message: string;
-      errors?: Partial<Record<keyof SchemaSingUpModel, string[]>>;
-      formData?: Partial<SchemaSingUpModel>;
+      errors?: Partial<Record<keyof SchemaSignUpModel, string[]>>;
+      formData?: Partial<SchemaSignUpModel>;
     };
 
 export async function singupAction(
@@ -25,7 +25,7 @@ export async function singupAction(
     plainFormData[key] = value as string;
   }
 
-  const result = schemaSingUp.safeParse(plainFormData);
+  const result = schemaSignUp.safeParse(plainFormData);
 
   if (!result.success) {
     const fieldErrors = result.error.flatten().fieldErrors;
@@ -34,7 +34,7 @@ export async function singupAction(
       success: false,
       message: "Validation failed",
       errors: fieldErrors,
-      formData: plainFormData as SchemaSingUpModel,
+      formData: plainFormData as SchemaSignUpModel,
     };
   }
   const { name, email, password, phone } = result.data;
