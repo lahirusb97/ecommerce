@@ -9,9 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
-import { loginAction, LoginFormState } from "@/app/login/LoginAction";
 import Link from "next/link";
+import { loginAction, LoginFormState } from "@/app/login/LoginAction";
+import Image from "next/image";
 
 const initialState: LoginFormState = { success: false, message: "" };
 
@@ -26,15 +26,13 @@ export default function LoginPageClient({
   );
   if (authenticated) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
+      <div className="flex h-screen w-full items-center justify-center bg-muted">
         <Card>
           <CardContent className="p-8 text-center">
-            <p className="text-lg font-semibold">
-              You are already logged in.{" "}
-              <Button variant="secondary" className="mt-4" asChild>
-                <Link href="/">Go back to home page</Link>
-              </Button>
-            </p>
+            <p className="text-lg font-semibold">You are already logged in.</p>
+            <Button variant="secondary" className="mt-4" asChild>
+              <Link href="/">Go back to home page</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -42,17 +40,22 @@ export default function LoginPageClient({
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <Card className="w-full max-w-sm shadow-2xl rounded-2xl border">
-        <CardHeader>
-          <h1 className="text-2xl font-bold text-center">
-            Sign in to your Admin account
-          </h1>
+    <div className="flex mt-28 items-center justify-center ">
+      <Card className="w-full max-w-sm shadow-xl rounded-2xl border p-0">
+        <CardHeader className="flex flex-col items-center space-y-1 p-2">
+          {/* Store Logo (replace /logo.svg with your brand logo) */}
+          <Image src="/logo.jpg" alt="Store Logo" width={60} height={60} />
+          <h1 className="text-xl font-bold text-center">Welcome Back!</h1>
+          <p className="text-xs text-muted-foreground text-center">
+            Sign in to your account to shop, track orders, and more.
+          </p>
         </CardHeader>
         <form action={formAction} autoComplete="off">
-          <CardContent className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="identifier">Email or Phone</Label>
+          <CardContent className="grid gap-3 pt-1 pb-0">
+            <div className="grid gap-1">
+              <Label htmlFor="identifier" className="text-xs">
+                Email or Phone
+              </Label>
               <Input
                 id="identifier"
                 name="identifier"
@@ -62,6 +65,7 @@ export default function LoginPageClient({
                 defaultValue={
                   (!state.success && state?.formData?.identifier) || ""
                 }
+                className="h-10 text-sm"
               />
               {!state.success && state.errors?.identifier && (
                 <span className="text-xs text-red-600">
@@ -69,8 +73,10 @@ export default function LoginPageClient({
                 </span>
               )}
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+            <div className="grid gap-1">
+              <Label htmlFor="password" className="text-xs">
+                Password
+              </Label>
               <Input
                 id="password"
                 name="password"
@@ -78,6 +84,7 @@ export default function LoginPageClient({
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
+                className="h-10 text-sm"
               />
               {!state.success && state.errors?.password && (
                 <span className="text-xs text-red-600">
@@ -85,26 +92,38 @@ export default function LoginPageClient({
                 </span>
               )}
             </div>
+            {/* Error message */}
             {!state.success && state.message && (
-              <div className="text-red-600 text-sm mt-1 rounded px-2 py-1 bg-red-50 border border-red-200">
+              <div className="text-red-600 text-xs mt-1 rounded px-2 py-1 bg-red-50 border border-red-200">
                 {state.message}
               </div>
             )}
           </CardContent>
-          <CardFooter className="flex flex-col gap-2">
+          <CardFooter className="flex flex-col gap-2 pt-2">
             <Button
               type="submit"
-              className="w-full font-semibold text-lg"
+              className="w-full font-semibold text-base rounded-xl h-10"
               disabled={pending}
             >
               {pending ? "Signing in..." : "Sign in"}
             </Button>
-            <span className="text-center text-xs text-muted-foreground">
-              Don’t have an account?{" "}
-              <Link href="/singup" className="underline">
-                Register
+            <div className="flex justify-between items-center w-full text-xs">
+              <Link
+                href="/forgot-password"
+                className="underline underline-offset-4 text-muted-foreground hover:text-primary"
+              >
+                Forgot password?
               </Link>
-            </span>
+              <span>
+                Don’t have an account?{" "}
+                <Link href="/signup" className="underline underline-offset-4">
+                  Register
+                </Link>
+              </span>
+            </div>
+            <div className="mt-2 text-center text-[11px] text-muted-foreground">
+              We’ll never share your credentials.
+            </div>
           </CardFooter>
         </form>
       </Card>

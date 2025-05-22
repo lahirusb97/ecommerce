@@ -55,7 +55,7 @@ const nav: NavItem[] = [
   },
   {
     label: "Categories",
-    href: "/admin/categories",
+    href: "/admin/category",
     icon: List,
   },
   {

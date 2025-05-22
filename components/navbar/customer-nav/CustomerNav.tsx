@@ -122,6 +122,7 @@ export function CustomerNav({ categories, isLogin }: CustomerNavProps) {
                 </Button>
               </Link>
               <Button
+                variant="destructive"
                 onClick={handleLogout}
                 className="m-4 flex items-center gap-2 px-3 py-2 rounded-xl text-base font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 transition"
               >

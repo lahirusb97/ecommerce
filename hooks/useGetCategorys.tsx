@@ -46,7 +46,7 @@ const useGetCategories = (): UseGetCategoryReturn => {
     try {
       const paramsData = paramsNullCleaner(params).toString();
       const query = new URLSearchParams(paramsData);
-      const res = await fetch(`/api/categories/?${query}`, {
+      const res = await fetch(`/api/category/?${query}`, {
         method: "GET",
         signal: controller.signal,
       });
